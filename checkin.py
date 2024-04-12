@@ -38,25 +38,42 @@ if __name__ == '__main__':
     # --------------------------------------------------------------------------------------------------------#
         if checkin.status_code == 200:
             # 解析返回的json数据
-            result = checkin.json()     
-            # 获取签到结果
-            status = result.get('message')
+            checkin_result = checkin.json()     
+            status = checkin_result.get('code')
 
             # 获取账号当前状态
-            result = state.json()
+            state_result = state.json()
             # 获取剩余时间
-            leftdays = int(float(result['data']['leftDays']))
+            leftdays = int(float(state_result['data']['leftDays']))
             # 获取账号email
-            email = result['data']['email']
-
-            if status == "Checkin! Get 1 Day":
+            email = state_result['data']['email']
+            
+            if status == 1:
                 success += 1
-                message_status = "签到成功，会员天数 + 1"
-            elif status == "Please Try Tomorrow":
-                message_status = "今日已签到"
+                score_info = checkin_result.get('list')[0]
+                message_status = f"签到成功，今日增加 {int(float(score_info['change']))} 分，目前积分 {int(float(score_info['balance']))}"
             else:
-                fail += 1
                 message_status = "签到失败，请检查..."
+            
+            # result = checkin.json()     
+            # # 获取签到结果
+            # status = result.get('message')
+
+            # # 获取账号当前状态
+            # result = state.json()
+            # # 获取剩余时间
+            # leftdays = int(float(result['data']['leftDays']))
+            # # 获取账号email
+            # email = result['data']['email']
+
+            # if status == "Checkin! Get 1 Day":
+            #     success += 1
+            #     message_status = "签到成功，会员天数 + 1"
+            # elif status == "Please Try Tomorrow":
+            #     message_status = "今日已签到"
+            # else:
+            #     fail += 1
+            #     message_status = "签到失败，请检查..."
 
             if leftdays is not None:
                 message_days = f"{leftdays} 天"
