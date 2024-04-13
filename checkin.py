@@ -48,7 +48,7 @@ if __name__ == '__main__':
             # 获取账号email
             email = state_result['data']['email']
             
-            if status == 1:
+            if status != 1:
                 success += 1
                 score_info = checkin_result.get('list')[0]
                 message_status = f"签到成功，今日增加 {int(float(score_info['change']))} 分，目前积分 {int(float(score_info['balance']))}"
